@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<!-- 하단의 Namespaces태그에서 aop , beans, context 체크 -->
+	
+	<!-- 
+	
+		# proxy (대변인,대변자) 
+	
+		Spring Framework에게 AOP Proxy를 사용시키게 하는 선언문
+		
+		예시
+		Client > Request > Real Subject
+		Client > Request > Proxy > Request > Real Subject
+	
+	-->
+	
+	<bean id="myAspect" class="com.spring.aop.MyAspect"/>
+	<bean id="classBoss" class="com.spring.aop.ClassBoss"/>
+	<bean id="classManager" class="com.spring.aop.ClassManager"/>
+	<bean id="classEmployee" class="com.spring.aop.ClassEmployee"/>
+	
+	
+	<aop:aspectj-autoproxy/>
+	
+</beans>
