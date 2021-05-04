@@ -1,11 +1,18 @@
 package com.spring.aop;
 
+import java.util.Arrays;
+
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
 
@@ -45,9 +52,49 @@ import org.aspectj.lang.annotation.Pointcut;
 */
 
 
+/*
+ *  # execution 명시자 
+ *  
+ *  - execution(수식어패턴 리턴타입패턴 클래스이름패턴?메서드이름패턴(파라미터패턴)) 
+ *  - 각 패턴은 *을 이용하여 모든값을 표현할 수 있다.
+ *  
+ *  
+ *  [패키지]
+ *  com.spring.aop	  > com.spring.aop패키지를 타겟
+ *  com.spring.aop..  > com.spring.aop로 시작하는 하위의 모든 패키지를 타겟
+ *  
+ *  [리턴타입]
+ *  *		> 모든 리턴 타입 타겟
+ *  void	> 리턴 타입이 void인 메서드만 타겟
+ *  !void	> 리턴 타입이 void가 아닌 메서드만 타겟 
+ *  
+ *  [매개 변수 지정]
+ *  (..)		>  0개 이상의 모든 파라미터 타겟
+ *  (*)			> 1개의 파라미터만 타겟
+ *  (*,*)		> 2개의 파라미터만 타겟
+ *  (String,*)	> 2개의 파라미터중 첫번째 파라미터가 String타입만 타겟
+ *  
+ *  
+ *  샘플 예시
+ *  
+ *  execution(public void set*(..)) 					> 리턴 타입이 void이고 메서드 이름이 set으로 시작하고 파라미터가 0개 이상인 메서드 타겟
+ *  execution(* abc.*.*()) 								> abc패키지에 속한 파라미터가 없는 모든 메서드 타겟
+ *  execution(* abc..*.*(..)) 							> abc패키지 및 하위 패키지에 있는 파라미터가 0개 이상인 메서드 타겟
+ *  execution(Long com.spring.aop.ClassBoss.work(..))   > 리턴 타입인 Long인 com.spring.aop 패키지 안의 ClassBoss클래스의 work 메서드 타겟
+ *  execution (* get*(*)) 								> 이름이 get으로 시작하고 파라미터가 한 개인 메서드 타겟
+ *  execution(* get*(*,*)) 								> 이름이 get으로 시작하고 파라미터가 2개인 메서드 타겟
+ *  execution(* read*(Integer,..)) 						> 메서드 이름이 read 로시작하고, 첫번째 파라미터 타입이 Integer이며 한개 이상의 파라미터를 갖는 메서드 타겟
+ *  
+ * */
+
+
 
 @Aspect	// 스프링 AOP에서 Aspect어노테이션을 사용해주어야 AOP기능이 동작한다.
 public class MyAspect {
+	
+	private static Logger logger = LoggerFactory.getLogger(MyAspect.class);
+	
+	
 	
 	@Pointcut("execution(* work())")	// 중복되는 메서드를 기술
 	private void pointcut() {
@@ -60,19 +107,20 @@ public class MyAspect {
 	//@Before("execution(* work())")
 	@Before("pointcut()")
 	public void before() {
-		System.out.println("===================================");
-		System.out.println("AOP Before 메서트 호출 : 출근한다.");
+		//System.out.println("AOP Before 메서트 호출 : 출근한다.");
+		logger.info("AOP Before 메서트 호출 : 출근한다.");
 	}
 	
 	// 메서드 호출 후
 	//@After("execution(* work())")
 	@After("pointcut()")
 	public void after() {
-		System.out.println("AOP After 메서트 호출 : 퇴근한다.");
+		//System.out.println("AOP After 메서트 호출 : 퇴근한다.");
+		logger.info("AOP After 메서트 호출 : 퇴근한다.");
 		
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// 메서드 호출 전후
 	@Around("execution(* getWorkTime())")
@@ -93,6 +141,29 @@ public class MyAspect {
 		System.out.println("업무 소요 시간 : " + (endTime - startTime) );
 		System.out.println("=============================\n");
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 호출된 메서드가 성공적으로 실행된 후
+	@AfterReturning("execution(* normal(..))")
+	public void afterReturning(JoinPoint jp) {		 // JoinPoint를 통하여 메서드의 파라미터를 전달받을 수 있다.
+		
+		System.out.println("1:" + Arrays.toString(jp.getArgs()));	// 메서드의 파라미터를 확인
+		System.out.println("2:" + jp.getKind());					// 메서드의 종류
+		System.out.println("3:" + jp.getSignature().getName());		// 어드바이즈메서드에 대한 설명(descrption)이 반환
+		System.out.println("4:" + jp.getTarget().toString());		// 대상 객체를 반환
+		System.out.println("5:" + jp.getThis().toString());			// 프록시 객체를 반환	
+		System.out.println("AOP AfterReturning메서트 호출 \n\n");
+		
+	}
+	
+	
+	// 호출된 메서드에서 예외가 발생한 후
+	@AfterThrowing("execution(public void com.spring.aop.ClassEmployee.mistake())")
+	public void afterThrowing() {
+		System.out.println("AOP AfterThrowing 메서드 호출 \n");
+	}
+	
 	
 	
 	

@@ -4,7 +4,7 @@ public interface IPosition {
 
 	void work();
 	void getWorkTime();
-	void normal();
+	void normal(String title , int salary);
 	void mistake();
 	
 	

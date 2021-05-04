@@ -19,15 +19,17 @@ public class ClassEmployee implements IPosition {
 	}
 
 	@Override
-	public void normal() {
-		// TODO Auto-generated method stub
+	public void normal(String title , int salary) {	// AfterReturning Advice 예시
+		System.out.println("직급 : " + title);
+		System.out.println("급여 : " + salary);
 
 	}
 
 	@Override
-	public void mistake() {
-		// TODO Auto-generated method stub
+	public void mistake() {			// AfterThrowing Advice 예시
+		System.out.println(3/0);
 
 	}
+
 
 }

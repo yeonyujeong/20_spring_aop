@@ -19,8 +19,9 @@ public class ClassBoss implements IPosition {
 	}
 
 	@Override
-	public void normal() {
-		// TODO Auto-generated method stub
+	public void normal(String title , int salary) {
+		System.out.println("직급 : " + title);
+		System.out.println("급여 : " + salary);
 
 	}
 

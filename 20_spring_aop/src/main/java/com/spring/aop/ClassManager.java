@@ -18,9 +18,9 @@ public class ClassManager implements IPosition {
 	}
 
 	@Override
-	public void normal() {
-		// TODO Auto-generated method stub
-
+	public void normal(String title , int salary) {
+		System.out.println("직급 : " + title);
+		System.out.println("급여 : " + salary);
 	}
 
 	@Override
@@ -28,5 +28,8 @@ public class ClassManager implements IPosition {
 		// TODO Auto-generated method stub
 
 	}
+
+
+
 
 }

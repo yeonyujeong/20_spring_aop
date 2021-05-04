@@ -28,9 +28,18 @@ public class HomeController {
 		
 		/////////////////////////////////////
 		
-		boss.getWorkTime();
-		manager.getWorkTime();
-		employee.getWorkTime();
+//		boss.getWorkTime();
+//		manager.getWorkTime();
+//		employee.getWorkTime();
+		
+//		boss.normal("사장" , 1000);
+//		manager.normal("관리자" , 600);
+//		employee.normal("직원" , 200);
+		
+		
+		//////////////////////////////////////
+		
+//		employee.mistake();
 		
 		return "home";
 	}
